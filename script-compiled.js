@@ -2,6 +2,8 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -35,10 +37,6 @@ var StopWatch = function (_React$Component) {
       return result;
     };
 
-    _this.print = function () {
-      _this.display.innerText = _this.format(_this.times);
-    };
-
     _this.format = function () {
       var minutes = _this.state.times.minutes;
       var seconds = _this.state.times.seconds;
@@ -48,7 +46,7 @@ var StopWatch = function (_React$Component) {
 
     _this.start = function () {
       if (!_this.state.running) {
-        _this.running = true;
+        _this.state.running = "true";
         _this.watch = setInterval(function () {
           return _this.step();
         }, 10);
@@ -58,20 +56,20 @@ var StopWatch = function (_React$Component) {
     _this.step = function () {
       if (!_this.state.running) return;
       _this.calculate();
-      _this.print();
+      //this.print();
     };
 
     _this.calculate = function () {
-      _this.times.miliseconds += 1;
+      _this.state.times.miliseconds += 1;
 
-      if (_this.times.miliseconds >= 100) {
-        _this.times.seconds += 1;
-        _this.times.miliseconds = 0;
+      if (_this.state.times.miliseconds >= 100) {
+        _this.state.times.seconds += 1;
+        _this.state.times.miliseconds = 0;
       }
 
-      if (_this.times.seconds >= 60) {
-        _this.times.minutes = +1;
-        _this.times.seconds = 0;
+      if (_this.state.times.seconds >= 60) {
+        _this.state.times.minutes = +1;
+        _this.state.times.seconds = 0;
       }
     };
 
@@ -96,8 +94,18 @@ var StopWatch = function (_React$Component) {
       _this.reset();
     };
 
-    _this.clearWatch = function () {
-      _this.print();
+    _this.addNewResult = function () {
+      var newResult = {
+        id: _this.state.resultsTable.length,
+        record: _this.format()
+      };
+
+      _this.setState({ resultsTable: [].concat(_toConsumableArray(_this.state.resultsTable), [newRecord]) });
+      console.log(_this.state.resultsTable);
+    };
+
+    _this.clearResults = function () {
+      _this.setState({ resultsTable: [] });
     };
 
     _this.render = function () {
@@ -123,16 +131,20 @@ var StopWatch = function (_React$Component) {
           ),
           React.createElement(
             "a",
-            { href: "#", className: "btn btn-start", onClick: function onClick() {
+            { href: "#", className: "btn btn-clear", onClick: function onClick() {
                 return _this.clear();
               } },
             "Clear"
           ),
           React.createElement(
             "a",
-            { href: "#", className: "btn btn-start", onClick: function onClick() {
-                return _this.start();
-              } },
+            {
+              href: "#",
+              className: "btn btn-clear-watch",
+              onClick: function onClick() {
+                return _this.clearResults();
+              }
+            },
             "Clear results"
           )
         ),
@@ -146,10 +158,26 @@ var StopWatch = function (_React$Component) {
         minutes: 0,
         seconds: 0,
         miliseconds: 0
-      }
+      },
+      resultsTable: []
     };
     return _this;
   }
+
+  //   print = () => {
+  //     this.display.innerText = this.format(this.times);
+  //   };
+
+  //   clearWatch = () => {
+  //     this.print();
+  //   };
+
+  //   clearResults = () => {
+  //     const mainList = document.querySelector(".results");
+  //     while (mainList.firstChild) {
+  //       mainList.removeChild(mainList.firstChild);
+  //     }
+  //   };
 
   return StopWatch;
 }(React.Component);
@@ -189,7 +217,7 @@ var Results = function (_React$Component3) {
   _createClass(Results, [{
     key: "render",
     value: function render() {
-      var results = this.props.history.map(function (ele) {
+      var results = this.props.resultsTable.map(function (ele) {
         return React.createElement("li", { key: ele.id }, ele.record);
       });
       return React.createElement("ol", { className: "results" }, React.createElement("p", {}, "Results"), results);
@@ -200,7 +228,7 @@ var Results = function (_React$Component3) {
 }(React.Component);
 
 Results.propTypes = {
-  history: React.PropTypes.array.isRequired
+  resultsTable: React.PropTypes.array.isRequired
 };
 
 

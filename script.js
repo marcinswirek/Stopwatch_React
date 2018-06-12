@@ -7,7 +7,8 @@ class StopWatch extends React.Component {
         minutes: 0,
         seconds: 0,
         miliseconds: 0
-      }
+      },
+      resultsTable: []
     };
   }
 
@@ -30,9 +31,9 @@ class StopWatch extends React.Component {
     return result;
   };
 
-  print = () => {
-    this.display.innerText = this.format(this.times);
-  };
+  //   print = () => {
+  //     this.display.innerText = this.format(this.times);
+  //   };
 
   format = () => {
     let minutes = this.state.times.minutes;
@@ -45,7 +46,7 @@ class StopWatch extends React.Component {
 
   start = () => {
     if (!this.state.running) {
-      this.running = true;
+      this.state.running = "true";
       this.watch = setInterval(() => this.step(), 10);
     }
   };
@@ -53,20 +54,20 @@ class StopWatch extends React.Component {
   step = () => {
     if (!this.state.running) return;
     this.calculate();
-    this.print();
+    //this.print();
   };
 
   calculate = () => {
-    this.times.miliseconds += 1;
+    this.state.times.miliseconds += 1;
 
-    if (this.times.miliseconds >= 100) {
-      this.times.seconds += 1;
-      this.times.miliseconds = 0;
+    if (this.state.times.miliseconds >= 100) {
+      this.state.times.seconds += 1;
+      this.state.times.miliseconds = 0;
     }
 
-    if (this.times.seconds >= 60) {
-      this.times.minutes = +1;
-      this.times.seconds = 0;
+    if (this.state.times.seconds >= 60) {
+      this.state.times.minutes = +1;
+      this.state.times.seconds = 0;
     }
   };
 
@@ -95,8 +96,29 @@ class StopWatch extends React.Component {
     this.reset();
   };
 
-  clearWatch = () => {
-    this.print();
+  //   clearWatch = () => {
+  //     this.print();
+  //   };
+
+  //   clearResults = () => {
+  //     const mainList = document.querySelector(".results");
+  //     while (mainList.firstChild) {
+  //       mainList.removeChild(mainList.firstChild);
+  //     }
+  //   };
+
+  addNewResult = () => {
+    let newResult = {
+      id: this.state.resultsTable.length,
+      record: this.format()
+    };
+
+    this.setState({ resultsTable: [...this.state.resultsTable, newRecord] });
+    console.log(this.state.resultsTable);
+  };
+
+  clearResults = () => {
+    this.setState({ resultsTable: [] });
   };
 
   render = () => {
@@ -109,10 +131,14 @@ class StopWatch extends React.Component {
           <a href="#" className={"btn btn-stop"} onClick={() => this.stop()}>
             Stop
           </a>
-          <a href="#" className={"btn btn-start"} onClick={() => this.clear()}>
+          <a href="#" className={"btn btn-clear"} onClick={() => this.clear()}>
             Clear
           </a>
-          <a href="#" className={"btn btn-start"} onClick={() => this.start()}>
+          <a
+            href="#"
+            className={"btn btn-clear-watch"}
+            onClick={() => this.clearResults()}
+          >
             Clear results
           </a>
         </nav>
@@ -146,11 +172,11 @@ class Results extends React.Component {
   }
 
   static propTypes = {
-    history: React.PropTypes.array.isRequired
+    resultsTable: React.PropTypes.array.isRequired
   };
 
   render() {
-    let results = this.props.history.map(ele => {
+    let results = this.props.resultsTable.map(ele => {
       return React.createElement("li", { key: ele.id }, ele.record);
     });
     return React.createElement(
