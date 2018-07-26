@@ -46,7 +46,7 @@ var StopWatch = function (_React$Component) {
 
     _this.start = function () {
       if (!_this.state.running) {
-        _this.state.running = "true";
+        _this.state.running = true;
         _this.watch = setInterval(function () {
           return _this.step();
         }, 10);
@@ -60,7 +60,13 @@ var StopWatch = function (_React$Component) {
     };
 
     _this.calculate = function () {
-      _this.state.times.miliseconds += 1;
+      _this.setState({
+        times: {
+          minutes: _this.state.times.minutes,
+          seconds: _this.state.times.seconds,
+          miliseconds: _this.state.times.miliseconds + 1
+        }
+      });
 
       if (_this.state.times.miliseconds >= 100) {
         _this.state.times.seconds += 1;
@@ -74,11 +80,11 @@ var StopWatch = function (_React$Component) {
     };
 
     _this.results = function (times) {
-      var resultsList = document.createElement("li");
+      var elementList = document.createElement("li");
       var resultsElement = document.querySelector(".results");
       if (_this.times.minutes !== 0 || _this.times.seconds !== 0 || _this.times.miliseconds !== 0) {
-        resultsList.innerHTML = "" + _this.format(_this.times);
-        resultsElement.appendChild(resultsList);
+        elementList.innerHTML = "" + _this.format(_this.times);
+        resultsElement.appendChild(elementList);
       }
     };
 
@@ -86,6 +92,7 @@ var StopWatch = function (_React$Component) {
       _this.setState({
         running: false
       });
+      _this.results(_this.times);
       clearInterval(_this.watch);
     };
 
@@ -100,7 +107,7 @@ var StopWatch = function (_React$Component) {
         record: _this.format()
       };
 
-      _this.setState({ resultsTable: [].concat(_toConsumableArray(_this.state.resultsTable), [newRecord]) });
+      _this.setState({ resultsTable: [].concat(_toConsumableArray(_this.state.resultsTable), [newResult]) });
       console.log(_this.state.resultsTable);
     };
 
@@ -182,6 +189,9 @@ var StopWatch = function (_React$Component) {
   return StopWatch;
 }(React.Component);
 
+//Displays all App
+
+
 var Display = function (_React$Component2) {
   _inherits(Display, _React$Component2);
 
@@ -220,7 +230,7 @@ var Results = function (_React$Component3) {
       var results = this.props.resultsTable.map(function (ele) {
         return React.createElement("li", { key: ele.id }, ele.record);
       });
-      return React.createElement("ol", { className: "results" }, React.createElement("p", {}, "Results"), results);
+      return React.createElement("ul", { className: "results" }, React.createElement("p", {}, "Results"), results);
     }
   }]);
 

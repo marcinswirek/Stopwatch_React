@@ -46,7 +46,7 @@ class StopWatch extends React.Component {
 
   start = () => {
     if (!this.state.running) {
-      this.state.running = "true";
+      this.state.running = true;
       this.watch = setInterval(() => this.step(), 10);
     }
   };
@@ -58,7 +58,13 @@ class StopWatch extends React.Component {
   };
 
   calculate = () => {
-    this.state.times.miliseconds += 1;
+    this.setState({
+      times: {
+        minutes: this.state.times.minutes,
+        seconds: this.state.times.seconds,
+        miliseconds: this.state.times.miliseconds + 1
+      }
+    });
 
     if (this.state.times.miliseconds >= 100) {
       this.state.times.seconds += 1;
@@ -72,15 +78,15 @@ class StopWatch extends React.Component {
   };
 
   results = times => {
-    let resultsList = document.createElement("li");
+    let elementList = document.createElement("li");
     let resultsElement = document.querySelector(".results");
     if (
       this.times.minutes !== 0 ||
       this.times.seconds !== 0 ||
       this.times.miliseconds !== 0
     ) {
-      resultsList.innerHTML = `${this.format(this.times)}`;
-      resultsElement.appendChild(resultsList);
+      elementList.innerHTML = `${this.format(this.times)}`;
+      resultsElement.appendChild(elementList);
     }
   };
 
@@ -88,6 +94,7 @@ class StopWatch extends React.Component {
     this.setState({
       running: false
     });
+    this.results(this.times);
     clearInterval(this.watch);
   };
 
@@ -113,7 +120,7 @@ class StopWatch extends React.Component {
       record: this.format()
     };
 
-    this.setState({ resultsTable: [...this.state.resultsTable, newRecord] });
+    this.setState({ resultsTable: [...this.state.resultsTable, newResult] });
     console.log(this.state.resultsTable);
   };
 
@@ -143,11 +150,13 @@ class StopWatch extends React.Component {
           </a>
         </nav>
         <Display time={this.format()} />
+        {/* <Results resultsTable={this.results} /> */}
       </div>
     );
   };
 }
 
+//Displays all App
 class Display extends React.Component {
   constructor(props) {
     super(props);
@@ -180,7 +189,7 @@ class Results extends React.Component {
       return React.createElement("li", { key: ele.id }, ele.record);
     });
     return React.createElement(
-      "ol",
+      "ul",
       { className: "results" },
       React.createElement("p", {}, "Results"),
       results
