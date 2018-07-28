@@ -2,8 +2,6 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -56,7 +54,6 @@ var StopWatch = function (_React$Component) {
     _this.step = function () {
       if (!_this.state.running) return;
       _this.calculate();
-      //this.print();
     };
 
     _this.calculate = function () {
@@ -79,40 +76,10 @@ var StopWatch = function (_React$Component) {
       }
     };
 
-    _this.results = function (times) {
-      var elementList = document.createElement("li");
-      var resultsElement = document.querySelector(".results");
-      if (_this.times.minutes !== 0 || _this.times.seconds !== 0 || _this.times.miliseconds !== 0) {
-        elementList.innerHTML = "" + _this.format(_this.times);
-        resultsElement.appendChild(elementList);
-      }
-    };
-
     _this.stop = function () {
       _this.setState({
         running: false
       });
-      _this.results(_this.times);
-      clearInterval(_this.watch);
-    };
-
-    _this.clear = function () {
-      _this.stop();
-      _this.reset();
-    };
-
-    _this.addNewResult = function () {
-      var newResult = {
-        id: _this.state.resultsTable.length,
-        record: _this.format()
-      };
-
-      _this.setState({ resultsTable: [].concat(_toConsumableArray(_this.state.resultsTable), [newResult]) });
-      console.log(_this.state.resultsTable);
-    };
-
-    _this.clearResults = function () {
-      _this.setState({ resultsTable: [] });
     };
 
     _this.render = function () {
@@ -139,20 +106,9 @@ var StopWatch = function (_React$Component) {
           React.createElement(
             "a",
             { href: "#", className: "btn btn-clear", onClick: function onClick() {
-                return _this.clear();
+                return _this.reset();
               } },
             "Clear"
-          ),
-          React.createElement(
-            "a",
-            {
-              href: "#",
-              className: "btn btn-clear-watch",
-              onClick: function onClick() {
-                return _this.clearResults();
-              }
-            },
-            "Clear results"
           )
         ),
         React.createElement(Display, { time: _this.format() })
@@ -170,21 +126,6 @@ var StopWatch = function (_React$Component) {
     };
     return _this;
   }
-
-  //   print = () => {
-  //     this.display.innerText = this.format(this.times);
-  //   };
-
-  //   clearWatch = () => {
-  //     this.print();
-  //   };
-
-  //   clearResults = () => {
-  //     const mainList = document.querySelector(".results");
-  //     while (mainList.firstChild) {
-  //       mainList.removeChild(mainList.firstChild);
-  //     }
-  //   };
 
   return StopWatch;
 }(React.Component);
@@ -213,32 +154,6 @@ var Display = function (_React$Component2) {
 
 Display.propTypes = {
   time: React.PropTypes.string.isRequired
-};
-
-var Results = function (_React$Component3) {
-  _inherits(Results, _React$Component3);
-
-  function Results(props) {
-    _classCallCheck(this, Results);
-
-    return _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).call(this, props));
-  }
-
-  _createClass(Results, [{
-    key: "render",
-    value: function render() {
-      var results = this.props.resultsTable.map(function (ele) {
-        return React.createElement("li", { key: ele.id }, ele.record);
-      });
-      return React.createElement("ul", { className: "results" }, React.createElement("p", {}, "Results"), results);
-    }
-  }]);
-
-  return Results;
-}(React.Component);
-
-Results.propTypes = {
-  resultsTable: React.PropTypes.array.isRequired
 };
 
 

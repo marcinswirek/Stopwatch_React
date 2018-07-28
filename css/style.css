@@ -41,7 +41,7 @@ a {
 }
 
 a:hover {
-  transform: scale(1.1) rotate(1deg);
+  transform: scale(1.1) rotate(0.5deg);
   box-shadow: 0 0 15px black;
 }
 

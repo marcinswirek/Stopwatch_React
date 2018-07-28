@@ -31,10 +31,6 @@ class StopWatch extends React.Component {
     return result;
   };
 
-  //   print = () => {
-  //     this.display.innerText = this.format(this.times);
-  //   };
-
   format = () => {
     let minutes = this.state.times.minutes;
     let seconds = this.state.times.seconds;
@@ -54,7 +50,6 @@ class StopWatch extends React.Component {
   step = () => {
     if (!this.state.running) return;
     this.calculate();
-    //this.print();
   };
 
   calculate = () => {
@@ -77,55 +72,10 @@ class StopWatch extends React.Component {
     }
   };
 
-  results = times => {
-    let elementList = document.createElement("li");
-    let resultsElement = document.querySelector(".results");
-    if (
-      this.times.minutes !== 0 ||
-      this.times.seconds !== 0 ||
-      this.times.miliseconds !== 0
-    ) {
-      elementList.innerHTML = `${this.format(this.times)}`;
-      resultsElement.appendChild(elementList);
-    }
-  };
-
   stop = () => {
     this.setState({
       running: false
     });
-    this.results(this.times);
-    clearInterval(this.watch);
-  };
-
-  clear = () => {
-    this.stop();
-    this.reset();
-  };
-
-  //   clearWatch = () => {
-  //     this.print();
-  //   };
-
-  //   clearResults = () => {
-  //     const mainList = document.querySelector(".results");
-  //     while (mainList.firstChild) {
-  //       mainList.removeChild(mainList.firstChild);
-  //     }
-  //   };
-
-  addNewResult = () => {
-    let newResult = {
-      id: this.state.resultsTable.length,
-      record: this.format()
-    };
-
-    this.setState({ resultsTable: [...this.state.resultsTable, newResult] });
-    console.log(this.state.resultsTable);
-  };
-
-  clearResults = () => {
-    this.setState({ resultsTable: [] });
   };
 
   render = () => {
@@ -138,19 +88,11 @@ class StopWatch extends React.Component {
           <a href="#" className={"btn btn-stop"} onClick={() => this.stop()}>
             Stop
           </a>
-          <a href="#" className={"btn btn-clear"} onClick={() => this.clear()}>
+          <a href="#" className={"btn btn-clear"} onClick={() => this.reset()}>
             Clear
-          </a>
-          <a
-            href="#"
-            className={"btn btn-clear-watch"}
-            onClick={() => this.clearResults()}
-          >
-            Clear results
           </a>
         </nav>
         <Display time={this.format()} />
-        {/* <Results resultsTable={this.results} /> */}
       </div>
     );
   };
@@ -171,28 +113,6 @@ class Display extends React.Component {
       "div",
       { className: "stopWatch" },
       this.props.time
-    );
-  }
-}
-
-class Results extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  static propTypes = {
-    resultsTable: React.PropTypes.array.isRequired
-  };
-
-  render() {
-    let results = this.props.resultsTable.map(ele => {
-      return React.createElement("li", { key: ele.id }, ele.record);
-    });
-    return React.createElement(
-      "ul",
-      { className: "results" },
-      React.createElement("p", {}, "Results"),
-      results
     );
   }
 }
